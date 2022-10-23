@@ -1,3 +1,21 @@
+let convertChoiceToEmoji = (strChoice) => {
+    let emoji = "❌";
+    switch (strChoice.toLowerCase()) {
+        case "paper":
+            emoji = "📄";
+            break;
+        case "rock":
+            emoji = "🪨";
+            break;
+        case "scissors":
+            emoji = "✂️"
+            break;
+        default:
+            break;
+    }
+    return emoji;
+}
+
 let getComputerChoice = () => {
     let items = Array("Rock", "Paper", "Scissors")
     return items[Math.floor(Math.random() * items.length)]
@@ -26,33 +44,68 @@ let playRound = (playerSelection, computerSelection) => {
     }
 };
 
-function game() {
-    let wins = 0, draws = 0, rounds = 5;
-    for (let index = 0; index < 5; index++) {
-        let playerChoice = getPlayerChoice();
-        let computerChoice = getComputerChoice();
-        console.log("Player choice:", playerChoice.toUpperCase());
-        console.log("Computer choice:", computerChoice.toUpperCase());
-        let result = playRound(playerChoice, computerChoice);
-        console.log(result);
-        if (result === "Win") {
-            wins++;
-        }
-        else if (result === "Draw") {
-            draws++;
-        }
+let storeResultInTable = (result) => {
+    let table = document.querySelector("table");
+    let row = document.createElement('tr');
+    let data = document.createElement('td');
+    switch (result) {
+        case "Tie":
+            data.textContent = "Tied!";
+            data.style.backgroundColor = "rgb(243, 252, 127)";
+            row.appendChild(data);
+            table.appendChild(row);
+            break;
+        case "Win":
+            data.textContent = "Player won!";
+            data.style.backgroundColor = "rgb(195, 245, 166)";
+            row.appendChild(data);
+            table.appendChild(row);
+            break;
+        case "Lose":
+            data.textContent = "Computer won!";
+            data.style.backgroundColor = "rgb(255, 155, 155)";
+            row.appendChild(data);
+            table.appendChild(row);
+            break;
+        default:
+            break;
     }
-    let losses = rounds - wins - draws
-    if (wins > losses) {
-        return "Win";
-    }
-    else if (wins === losses) {
-        return "Draw";
-    }
-    else {
-        return "Lose";
-    }
-    
-}
+};
 
-console.log("Final Result:", game());
+let paperButton = document.querySelector("#paper-button");
+let rockButton = document.querySelector("#rock-button");
+let scissorsButton = document.querySelector("#scissors-button");
+
+// Add loop by keeping track of who reaches score of 5 first
+let playerScore = 0, computerScore = 0;
+
+paperButton.addEventListener("click", () => {
+    let computerChoice = getComputerChoice();
+    let enemyDisplayChoice = document.querySelector("#enemy-choice");
+    enemyDisplayChoice.textContent = convertChoiceToEmoji(computerChoice);
+    
+    // add result to table
+    storeResultInTable(playRound("paper", computerChoice));
+    console.log(playRound("paper", computerChoice));
+});
+
+rockButton.addEventListener("click", () => {
+    let computerChoice = getComputerChoice();
+    let enemyDisplayChoice = document.querySelector("#enemy-choice");
+    enemyDisplayChoice.textContent = convertChoiceToEmoji(computerChoice);
+    
+    storeResultInTable(playRound("rock", computerChoice));
+    
+    console.log(playRound("rock", computerChoice));
+});
+
+scissorsButton.addEventListener("click", () => {
+    let computerChoice = getComputerChoice();
+    let enemyDisplayChoice = document.querySelector("#enemy-choice");
+    enemyDisplayChoice.textContent = convertChoiceToEmoji(computerChoice);
+    
+    storeResultInTable(playRound("scissors", computerChoice));
+    
+    console.log(playRound("scissors", computerChoice));
+});
+
